@@ -1,0 +1,16 @@
+[project]
+name = "archetypes-core"
+version = "0.1.0"
+description = "Behavioral intelligence engine — primitives, T/C/V scoring, situation pressure, relationship trajectory"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pyyaml>=6.0"]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
