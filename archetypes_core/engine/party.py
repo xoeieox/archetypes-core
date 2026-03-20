@@ -12,6 +12,7 @@ from archetypes_core.engine.tcv import (
     V_SCALE,
     V_UNTRIGGERED_DAMPEN,
 )
+from archetypes_core.situations import SITUATIONS
 
 
 def classify_pair(t: float, c: float, v: float) -> dict:
@@ -72,9 +73,58 @@ def classify_pair(t: float, c: float, v: float) -> dict:
     }
 
 
-def compute_party_matrix(characters: list[dict], *, t_scale=None, c_scale=None, v_scale=None, v_dampen=None) -> dict:
+def _apply_situation_modifiers(pair: dict, situation_ids: list[str]) -> dict:
+    """Apply situation pressure modifiers to a computed pair's T/C/V scores."""
+    if not situation_ids:
+        return pair
+
+    t_mod = 0.0
+    c_mod = 0.0
+    v_mod = 0.0
+
+    char_a_prims = {p["primitive_id"] for p in pair.get("tension_detail", [])}
+    char_b_prims = {p["primitive_id"] for p in pair.get("complementarity_detail", [])}
+    all_prims = char_a_prims | char_b_prims
+
+    for sid in situation_ids:
+        sit = SITUATIONS.get(sid, {})
+        intensity = sit.get("intensity", 0.5)
+
+        # Pressure targets increase tension when they match character primitives
+        targets = set(sit.get("pressure_targets", []))
+        if targets & all_prims:
+            t_mod += 0.05 * intensity
+
+        # Shadow activators increase volatility
+        activators = set(sit.get("shadow_activators", []))
+        if activators & all_prims:
+            v_mod += 0.08 * intensity
+
+        # Tension situations raise T, complementary situations raise C
+        for ts in sit.get("tension_situations", []):
+            if ts in situation_ids:
+                t_mod += 0.03 * intensity
+        for cs in sit.get("complementary_situations", []):
+            if cs in situation_ids:
+                c_mod += 0.03 * intensity
+
+    pair = {**pair}
+    pair["t"] = round(min(pair["t"] + t_mod, 1.0), 3)
+    pair["c"] = round(min(pair["c"] + c_mod, 1.0), 3)
+    pair["v"] = round(min(pair["v"] + v_mod, 1.0), 3)
+    # Re-classify with modified scores
+    pair["label"] = classify_pair(pair["t"], pair["c"], pair["v"])
+    return pair
+
+
+def compute_party_matrix(characters: list[dict], *, t_scale=None, c_scale=None,
+                         v_scale=None, v_dampen=None, situation_ids=None) -> dict:
     """
     Given a list of characters, compute all pairwise T/C/V scores.
+
+    Args:
+      situation_ids: optional list of situation primitive IDs to apply as
+                     environmental pressure modifiers to the scores.
 
     Returns:
       pairs: list of pair score dicts
@@ -90,6 +140,8 @@ def compute_party_matrix(characters: list[dict], *, t_scale=None, c_scale=None, 
             pair = compute_pair_scores(characters[i], characters[j],
                                        t_scale=t_scale, c_scale=c_scale,
                                        v_scale=v_scale, v_dampen=v_dampen)
+            if situation_ids:
+                pair = _apply_situation_modifiers(pair, situation_ids)
             pairs.append(pair)
 
     if not pairs:
