@@ -1,7 +1,7 @@
 """
 Archetypal Intelligence — Primitive Catalog (auto-generated)
 
-72 behavioral primitives across 7 categories.
+88 behavioral primitives across 7 categories.
 Each primitive defines its tension and complementary relationships
 with other primitives, enabling pure-computation T/C/V scoring
 without LLM calls.
@@ -11,7 +11,7 @@ DO NOT EDIT BY HAND — regenerate with scripts/compile_primitives.py
 
 PRIMITIVES = {
     # =========================================================================
-    # BEHAVIORAL (13)
+    # BEHAVIORAL (17)
     # =========================================================================
     "adaptive-flexibility": {
         "name": "Adaptive Flexibility",
@@ -27,7 +27,7 @@ PRIMITIVES = {
         "rigid-adherence",
         "duty-over-desire",
     ],
-        "shadow_volatility": 0.25,
+        "shadow_volatility": 0.3,
     },
     "cautious-conservatism": {
         "name": "Cautious Conservatism",
@@ -43,7 +43,7 @@ PRIMITIVES = {
         "capacity-for-change",
         "adaptive-flexibility",
     ],
-        "shadow_volatility": 0.15,
+        "shadow_volatility": 0.3,
     },
     "charismatic-leadership": {
         "name": "Charismatic Leadership",
@@ -75,7 +75,7 @@ PRIMITIVES = {
         "systematic-analysis",
         "self-mastery",
     ],
-        "shadow_volatility": 0.6,
+        "shadow_volatility": 0.3,
     },
     "institutional-transmutation": {
         "name": "Institutional Transmutation",
@@ -107,7 +107,7 @@ PRIMITIVES = {
         "lateral-thinking",
         "risk-taking",
     ],
-        "shadow_volatility": 0.1,
+        "shadow_volatility": 0.3,
     },
     "obsessive-focus": {
         "name": "Obsessive Focus",
@@ -123,7 +123,7 @@ PRIMITIVES = {
         "connection-seeking",
         "self-mastery",
     ],
-        "shadow_volatility": 0.45,
+        "shadow_volatility": 0.3,
     },
     "patient-observation": {
         "name": "Patient Observation",
@@ -139,7 +139,41 @@ PRIMITIVES = {
         "risk-taking",
         "decisive-logic",
     ],
-        "shadow_volatility": 0.1,
+        "shadow_volatility": 0.3,
+    },
+    "performative-display": {
+        "name": "Performative Display",
+        "category": "behavioral",
+        "description": "The need to be seen, to present, to control how one is perceived",
+        "tension_with": [
+        "vulnerability",
+        "stoic-acceptance",
+        "humility",
+    ],
+        "complementary_with": [
+        "social-charm",
+        "pride",
+        "charismatic-leadership",
+    ],
+        "shadow_volatility": 0.3,
+    },
+    "performative-eloquence": {
+        "name": "Performative Eloquence",
+        "category": "behavioral",
+        "description": "Speech that creates reality rather than describes it — language deployed not as communication but as an instrument for generating belief, independent of underlying truth",
+        "tension_with": [
+        "truth-above-all",
+        "concrete-pragmatism",
+        "existential-void",
+        "vulnerability",
+    ],
+        "complementary_with": [
+        "charismatic-leadership",
+        "strategic-deception",
+        "manipulation",
+        "pride",
+    ],
+        "shadow_volatility": 0.3,
     },
     "rigid-adherence": {
         "name": "Rigid Adherence",
@@ -155,7 +189,7 @@ PRIMITIVES = {
         "humility",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.35,
+        "shadow_volatility": 0.3,
     },
     "risk-taking": {
         "name": "Risk-Taking",
@@ -171,7 +205,7 @@ PRIMITIVES = {
         "systematic-analysis",
         "patient-observation",
     ],
-        "shadow_volatility": 0.45,
+        "shadow_volatility": 0.3,
     },
     "self-mastery": {
         "name": "Self-Mastery",
@@ -186,6 +220,21 @@ PRIMITIVES = {
         "passionate-intensity",
         "impulsive-action",
         "pleasure-priority",
+    ],
+        "shadow_volatility": 0.3,
+    },
+    "social-charm": {
+        "name": "Social Charm",
+        "category": "behavioral",
+        "description": "Natural magnetism and warmth — the ability to put others at ease and make them feel valued",
+        "tension_with": [
+        "strategic-deception",
+        "isolation-as-protection",
+    ],
+        "complementary_with": [
+        "generosity",
+        "empathic-resonance",
+        "performative-display",
     ],
         "shadow_volatility": 0.3,
     },
@@ -221,8 +270,23 @@ PRIMITIVES = {
     ],
         "shadow_volatility": 0.3,
     },
+    "territorial-control": {
+        "name": "Territorial Control",
+        "category": "behavioral",
+        "description": "The need to claim, secure, and defend space and resources",
+        "tension_with": [
+        "generosity",
+        "adaptive-flexibility",
+    ],
+        "complementary_with": [
+        "patient-observation",
+        "pride",
+        "rigid-adherence",
+    ],
+        "shadow_volatility": 0.3,
+    },
     # =========================================================================
-    # COGNITIVE (11)
+    # COGNITIVE (12)
     # =========================================================================
     "abstract-conceptualization": {
         "name": "Abstract Conceptualization",
@@ -254,7 +318,7 @@ PRIMITIVES = {
         "systematic-analysis",
         "patient-observation",
     ],
-        "shadow_volatility": 0.1,
+        "shadow_volatility": 0.2,
     },
     "curiosity-driven-exploration": {
         "name": "Curiosity-Driven Exploration",
@@ -286,7 +350,7 @@ PRIMITIVES = {
         "connection-seeking",
         "humility",
     ],
-        "shadow_volatility": 0.15,
+        "shadow_volatility": 0.2,
     },
     "intuitive-leaps": {
         "name": "Intuitive Leaps",
@@ -302,7 +366,7 @@ PRIMITIVES = {
         "patient-observation",
         "humility",
     ],
-        "shadow_volatility": 0.3,
+        "shadow_volatility": 0.2,
     },
     "lateral-thinking": {
         "name": "Lateral Thinking",
@@ -318,7 +382,23 @@ PRIMITIVES = {
         "methodical-approach",
         "concrete-pragmatism",
     ],
-        "shadow_volatility": 0.25,
+        "shadow_volatility": 0.2,
+    },
+    "manipulation": {
+        "name": "Manipulation",
+        "category": "cognitive",
+        "description": "Strategic influence of others' perceptions and choices — the chess player of human interaction",
+        "tension_with": [
+        "generosity",
+        "vulnerability",
+        "loyal-companionship",
+    ],
+        "complementary_with": [
+        "strategic-deception",
+        "systematic-analysis",
+        "social-wit",
+    ],
+        "shadow_volatility": 0.2,
     },
     "memory-based-processing": {
         "name": "Memory-Based Processing",
@@ -350,7 +430,7 @@ PRIMITIVES = {
         "patient-observation",
         "humility",
     ],
-        "shadow_volatility": 0.15,
+        "shadow_volatility": 0.2,
     },
     "philosophical-contemplation": {
         "name": "Philosophical Contemplation",
@@ -398,7 +478,7 @@ PRIMITIVES = {
         "risk-taking",
         "adaptive-flexibility",
     ],
-        "shadow_volatility": 0.1,
+        "shadow_volatility": 0.2,
     },
     # =========================================================================
     # COPING (8)
@@ -433,7 +513,7 @@ PRIMITIVES = {
         "physical-activity-release",
         "connection-seeking",
     ],
-        "shadow_volatility": 0.65,
+        "shadow_volatility": 0.25,
     },
     "humor-as-defense": {
         "name": "Humor as Defense",
@@ -449,7 +529,7 @@ PRIMITIVES = {
         "connection-seeking",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.3,
+        "shadow_volatility": 0.25,
     },
     "intellectual-absorption": {
         "name": "Intellectual Absorption",
@@ -465,7 +545,7 @@ PRIMITIVES = {
         "artistic-expression-as-processing",
         "passionate-intensity",
     ],
-        "shadow_volatility": 0.3,
+        "shadow_volatility": 0.25,
     },
     "physical-activity-release": {
         "name": "Physical Activity Release",
@@ -481,7 +561,7 @@ PRIMITIVES = {
         "artistic-expression-as-processing",
         "stoic-acceptance",
     ],
-        "shadow_volatility": 0.3,
+        "shadow_volatility": 0.25,
     },
     "social-connection-for-regulation": {
         "name": "Social Connection for Regulation",
@@ -513,7 +593,7 @@ PRIMITIVES = {
         "connection-seeking",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.45,
+        "shadow_volatility": 0.25,
     },
     "work-as-anesthetic": {
         "name": "Work as Anesthetic",
@@ -529,10 +609,10 @@ PRIMITIVES = {
         "artistic-expression-as-processing",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.35,
+        "shadow_volatility": 0.25,
     },
     # =========================================================================
-    # EMOTIONAL (10)
+    # EMOTIONAL (15)
     # =========================================================================
     "anxious-vigilance": {
         "name": "Anxious Vigilance",
@@ -548,7 +628,7 @@ PRIMITIVES = {
         "stoic-acceptance",
         "risk-taking",
     ],
-        "shadow_volatility": 0.5,
+        "shadow_volatility": 0.4,
     },
     "connection-seeking": {
         "name": "Connection-Seeking",
@@ -564,7 +644,59 @@ PRIMITIVES = {
         "self-mastery",
         "integration",
     ],
-        "shadow_volatility": 0.3,
+        "shadow_volatility": 0.4,
+    },
+    "despair": {
+        "name": "Despair",
+        "category": "emotional",
+        "description": "The collapse of all exits — a state in which every possible action appears blocked or inadequate, and annihilation presents itself as a logical conclusion rather than an emotional one",
+        "tension_with": [
+        "faith-driven-purpose",
+        "capacity-for-change",
+        "integration",
+        "joyful-optimism",
+    ],
+        "complementary_with": [
+        "existential-seeing",
+        "fragmentation",
+        "melancholic-tendency",
+        "isolation-as-protection",
+    ],
+        "shadow_volatility": 0.4,
+    },
+    "empathic-resonance": {
+        "name": "Empathic Resonance",
+        "category": "emotional",
+        "description": "Involuntary emotional mirroring — feeling what others feel before thinking about it",
+        "tension_with": [
+        "stoic-acceptance",
+        "strategic-deception",
+        "obsessive-focus",
+    ],
+        "complementary_with": [
+        "nurturing",
+        "healing-through-medium",
+        "sensitivity",
+    ],
+        "shadow_volatility": 0.4,
+    },
+    "grief": {
+        "name": "Grief",
+        "category": "emotional",
+        "description": "The raw experience of irreplaceable loss — not the processing of it but the fact of it, present and undeniable",
+        "tension_with": [
+        "work-as-anesthetic",
+        "joyful-optimism",
+        "stoic-acceptance",
+        "adaptive-flexibility",
+    ],
+        "complementary_with": [
+        "grief-processing",
+        "melancholic-tendency",
+        "isolation-as-protection",
+        "memory-based-processing",
+    ],
+        "shadow_volatility": 0.4,
     },
     "grief-processing": {
         "name": "Grief Processing",
@@ -596,7 +728,7 @@ PRIMITIVES = {
         "loyal-companionship",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.35,
+        "shadow_volatility": 0.4,
     },
     "joyful-optimism": {
         "name": "Joyful Optimism",
@@ -612,7 +744,7 @@ PRIMITIVES = {
         "stoic-acceptance",
         "patient-observation",
     ],
-        "shadow_volatility": 0.2,
+        "shadow_volatility": 0.4,
     },
     "loyal-companionship": {
         "name": "Loyal Companionship",
@@ -660,7 +792,7 @@ PRIMITIVES = {
         "self-mastery",
         "patient-observation",
     ],
-        "shadow_volatility": 0.55,
+        "shadow_volatility": 0.4,
     },
     "rage-response": {
         "name": "Rage Response",
@@ -676,7 +808,23 @@ PRIMITIVES = {
         "self-mastery",
         "patient-observation",
     ],
-        "shadow_volatility": 0.7,
+        "shadow_volatility": 0.4,
+    },
+    "sensitivity": {
+        "name": "Sensitivity",
+        "category": "emotional",
+        "description": "Heightened perceptual and emotional receptivity — noticing what others miss",
+        "tension_with": [
+        "stoic-acceptance",
+        "impulsive-action",
+        "rage-response",
+    ],
+        "complementary_with": [
+        "empathic-resonance",
+        "aesthetic-perception-of-impermanence",
+        "patient-observation",
+    ],
+        "shadow_volatility": 0.4,
     },
     "stoic-acceptance": {
         "name": "Stoic Acceptance",
@@ -692,10 +840,26 @@ PRIMITIVES = {
         "connection-seeking",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.15,
+        "shadow_volatility": 0.4,
+    },
+    "vulnerability": {
+        "name": "Vulnerability",
+        "category": "emotional",
+        "description": "The capacity to be wounded and to let that wounding be visible",
+        "tension_with": [
+        "strategic-deception",
+        "stoic-acceptance",
+        "pride",
+    ],
+        "complementary_with": [
+        "empathic-resonance",
+        "nurturing",
+        "connection-seeking",
+    ],
+        "shadow_volatility": 0.4,
     },
     # =========================================================================
-    # GROWTH & SHADOW (10)
+    # GROWTH & SHADOW (13)
     # =========================================================================
     "capacity-for-change": {
         "name": "Capacity for Change",
@@ -711,7 +875,7 @@ PRIMITIVES = {
         "rigid-adherence",
         "humility",
     ],
-        "shadow_volatility": 0.2,
+        "shadow_volatility": 0.5,
     },
     "envy": {
         "name": "Envy",
@@ -727,7 +891,25 @@ PRIMITIVES = {
         "humility",
         "joyful-optimism",
     ],
-        "shadow_volatility": 0.55,
+        "shadow_volatility": 0.5,
+    },
+    "existential-void": {
+        "name": "Existential Void",
+        "category": "growth-shadow",
+        "description": "Fundamental hollowness at the core — not the collapse of a self but the recognition that no self was ever there; a consciousness that exists primarily as the thing others project meaning onto",
+        "tension_with": [
+        "integration",
+        "capacity-for-change",
+        "faith-driven-purpose",
+        "philosophical-contemplation",
+    ],
+        "complementary_with": [
+        "performative-eloquence",
+        "pride",
+        "fragmentation",
+        "strategic-deception",
+    ],
+        "shadow_volatility": 0.5,
     },
     "fragmentation": {
         "name": "Fragmentation",
@@ -743,7 +925,7 @@ PRIMITIVES = {
         "self-mastery",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.7,
+        "shadow_volatility": 0.5,
     },
     "guilt-conscience": {
         "name": "Guilt/Conscience",
@@ -775,7 +957,7 @@ PRIMITIVES = {
         "achievement-driven",
         "charismatic-leadership",
     ],
-        "shadow_volatility": 0.1,
+        "shadow_volatility": 0.5,
     },
     "integration": {
         "name": "Integration",
@@ -791,7 +973,38 @@ PRIMITIVES = {
         "passionate-intensity",
         "truth-above-all",
     ],
-        "shadow_volatility": 0.15,
+        "shadow_volatility": 0.5,
+    },
+    "paranoia": {
+        "name": "Paranoia",
+        "category": "growth-shadow",
+        "description": "Strategic awareness collapsed into suspicion — pattern recognition without the capacity to distinguish threat from coincidence",
+        "tension_with": [
+        "empathic-resonance",
+        "connection-seeking",
+        "truth-above-all",
+        "faith-driven-purpose",
+    ],
+        "complementary_with": [
+        "anxious-vigilance",
+        "strategic-deception",
+    ],
+        "shadow_volatility": 0.5,
+    },
+    "passive-aggression": {
+        "name": "Passive Aggression",
+        "category": "growth-shadow",
+        "description": "Hostility expressed indirectly — warmth withheld, compliance performed, resentment communicated through absence rather than confrontation",
+        "tension_with": [
+        "truth-above-all",
+        "adaptive-flexibility",
+        "connection-seeking",
+    ],
+        "complementary_with": [
+        "vulnerability",
+        "empathic-resonance",
+    ],
+        "shadow_volatility": 0.5,
     },
     "pride": {
         "name": "Pride",
@@ -823,7 +1036,7 @@ PRIMITIVES = {
         "curiosity-driven-exploration",
         "humility",
     ],
-        "shadow_volatility": 0.4,
+        "shadow_volatility": 0.5,
     },
     "transmutation": {
         "name": "Transmutation",
@@ -855,10 +1068,10 @@ PRIMITIVES = {
         "stoic-acceptance",
         "capacity-for-change",
     ],
-        "shadow_volatility": 0.7,
+        "shadow_volatility": 0.5,
     },
     # =========================================================================
-    # RELATIONAL (8)
+    # RELATIONAL (11)
     # =========================================================================
     "aesthetic-perception-of-impermanence": {
         "name": "Aesthetic Perception of Impermanence",
@@ -921,6 +1134,40 @@ PRIMITIVES = {
         "social-wit",
         "patient-observation",
         "artistic-expression-as-processing",
+    ],
+        "shadow_volatility": 0.35,
+    },
+    "nurturing": {
+        "name": "Nurturing",
+        "category": "relational",
+        "description": "The instinct to care for, protect, and sustain others",
+        "tension_with": [
+        "self-mastery",
+        "pride",
+        "predatory-behavior",
+    ],
+        "complementary_with": [
+        "empathic-resonance",
+        "generosity",
+        "healing-through-medium",
+    ],
+        "shadow_volatility": 0.35,
+    },
+    "passive-receptivity": {
+        "name": "Passive Receptivity",
+        "category": "relational",
+        "description": "A self so unformed or so open that it takes the shape of whatever fills it — radical suggestibility not as weakness in a formed person but as the condition of being",
+        "tension_with": [
+        "defiance-rebellion",
+        "self-mastery",
+        "truth-above-all",
+        "rigid-adherence",
+    ],
+        "complementary_with": [
+        "sensitivity",
+        "connection-seeking",
+        "belonging-seeking",
+        "empathic-resonance",
     ],
         "shadow_volatility": 0.35,
     },
@@ -988,6 +1235,23 @@ PRIMITIVES = {
     ],
         "shadow_volatility": 0.35,
     },
+    "witnessed-recognition": {
+        "name": "Witnessed Recognition",
+        "category": "relational",
+        "description": "The need to have one's moral reality — not just actions but the inner truth of who one is and why — acknowledged by a specific witness. This is not diffuse connection-seeking or pride in comparison: it is an epistemic and ethical hunger for a particular other to see a particular truth about oneself.",
+        "tension_with": [
+        "isolation-as-protection",
+        "sovereign-withdrawal",
+        "self-mastery",
+    ],
+        "complementary_with": [
+        "connection-seeking",
+        "guilt-conscience",
+        "loyal-companionship",
+        "existential-seeing",
+    ],
+        "shadow_volatility": 0.35,
+    },
     # =========================================================================
     # VALUES (12)
     # =========================================================================
@@ -1021,7 +1285,7 @@ PRIMITIVES = {
         "truth-above-all",
         "integration",
     ],
-        "shadow_volatility": 0.25,
+        "shadow_volatility": 0.3,
     },
     "defiance-rebellion": {
         "name": "Defiance/Rebellion",
@@ -1053,7 +1317,7 @@ PRIMITIVES = {
         "pleasure-priority",
         "joyful-optimism",
     ],
-        "shadow_volatility": 0.2,
+        "shadow_volatility": 0.3,
     },
     "faith-driven-purpose": {
         "name": "Faith-Driven Purpose",
@@ -1101,7 +1365,7 @@ PRIMITIVES = {
         "truth-above-all",
         "courage-despite-doubt",
     ],
-        "shadow_volatility": 0.25,
+        "shadow_volatility": 0.3,
     },
     "inherited-identity": {
         "name": "Inherited Identity",
@@ -1133,7 +1397,7 @@ PRIMITIVES = {
         "humility",
         "adaptive-flexibility",
     ],
-        "shadow_volatility": 0.35,
+        "shadow_volatility": 0.3,
     },
     "personal-freedom-priority": {
         "name": "Personal Freedom Priority",
@@ -1165,7 +1429,7 @@ PRIMITIVES = {
         "self-mastery",
         "stoic-acceptance",
     ],
-        "shadow_volatility": 0.35,
+        "shadow_volatility": 0.3,
     },
     "truth-above-all": {
         "name": "Truth Above All",
@@ -1194,15 +1458,6 @@ CATEGORIES = {
     "growth-shadow": {"name": "Growth & Shadow", "color": "#1ABC9C", "dark": "#148F77"},
     "relational": {"name": "Relational", "color": "#E67E22", "dark": "#BA6418"},
 }
-
-
-# ---------------------------------------------------------------------------
-# Backward-compatible aliases for renamed primitives
-# Kyma's premade characters reference these old IDs
-# ---------------------------------------------------------------------------
-PRIMITIVES["artistic-expression"] = PRIMITIVES["artistic-expression-as-processing"]
-PRIMITIVES["pride-in-superiority"] = PRIMITIVES["pride"]
-PRIMITIVES["social-connection"] = PRIMITIVES["social-connection-for-regulation"]
 
 
 def validate_primitives():
