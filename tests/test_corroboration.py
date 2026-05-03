@@ -49,7 +49,7 @@ class CleanAdapter:
         return CorroborationResult(
             verdict="clean",
             claim=claim,
-            citations=[Citation(source_id="doc-1", excerpt="matches claim", provenance="grep")],
+            citations=[Citation(source_id="doc-1", excerpt="matches claim", provenance_method="grep")],
             freshness_stamp=FIXED_STAMP,
             scope_id=self.scope_id,
         )
@@ -71,7 +71,7 @@ class FlaggedAdapter:
                 Citation(
                     source_id="world-primitive:death-as-renewal",
                     excerpt="Death here is transformation, not cessation.",
-                    provenance="world_primitives table",
+                    provenance_method="world_primitives table",
                 )
             ],
             freshness_stamp=FIXED_STAMP,
@@ -177,7 +177,7 @@ class TestCorroborate:
                 Citation(
                     source_id="world-primitive:seasons-as-breath",
                     excerpt="Seasons are the god's exhalation.",
-                    provenance="world_primitives table",
+                    provenance_method="world_primitives table",
                 )
             ],
             freshness_stamp=FIXED_STAMP,
@@ -201,7 +201,7 @@ class TestCorroborate:
         c = restored.citations[0]
         assert c.source_id == "world-primitive:seasons-as-breath"
         assert c.excerpt == "Seasons are the god's exhalation."
-        assert c.provenance == "world_primitives table"
+        assert c.provenance_method == "world_primitives table"
 
         assert restored.primitive_decomposition is not None
         pd = restored.primitive_decomposition
@@ -215,3 +215,39 @@ class TestCorroborate:
         # All three stubs satisfy the protocol at runtime
         for adapter in (CleanAdapter(), FlaggedAdapter(), UnavailableAdapter()):
             assert isinstance(adapter, SubstrateAdapter)
+
+
+class TestCitationSchema:
+    def test_old_provenance_key_raises(self):
+        """from_dict with old 'provenance' key raises KeyError (clean break — no alias)."""
+        with pytest.raises(KeyError):
+            Citation.from_dict({
+                "source_id": "doc-1",
+                "excerpt": "some text",
+                "provenance": "grep",
+            })
+
+    def test_content_hash_round_trips(self):
+        """content_hash round-trips through to_dict/from_dict."""
+        c = Citation(
+            source_id="doc-2",
+            excerpt="relevant fragment",
+            content_hash="abc123deadbeef",
+            provenance_method="grep",
+        )
+        d = c.to_dict()
+        assert d["content_hash"] == "abc123deadbeef"
+        assert d["provenance_method"] == "grep"
+
+        restored = Citation.from_dict(d)
+        assert restored.content_hash == "abc123deadbeef"
+        assert restored.provenance_method == "grep"
+
+    def test_content_hash_none_round_trips(self):
+        """content_hash=None (default) round-trips correctly."""
+        c = Citation(source_id="doc-3", excerpt="fragment", provenance_method="rag")
+        d = c.to_dict()
+        assert d["content_hash"] is None
+
+        restored = Citation.from_dict(d)
+        assert restored.content_hash is None
