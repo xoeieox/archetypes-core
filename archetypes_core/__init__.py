@@ -9,3 +9,23 @@ No LLM calls. No web framework. No I/O.
 """
 
 __version__ = "0.1.0"
+
+from archetypes_core.provenance import (  # noqa: E402
+    INPUT_REF_TYPES,
+    SCHEMA_VERSION,
+    InputRef,
+    LapisToolReturn,
+    Provenance,
+    UpstreamRef,
+    to_lapis_return,
+)
+
+__all__ = [
+    "INPUT_REF_TYPES",
+    "SCHEMA_VERSION",
+    "InputRef",
+    "LapisToolReturn",
+    "Provenance",
+    "UpstreamRef",
+    "to_lapis_return",
+]
