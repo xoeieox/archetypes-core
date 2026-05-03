@@ -51,15 +51,17 @@ class Citation:
     SCP-shaped: Source, Claim-fragment, Provenance.
     """
 
-    source_id: str           # e.g. filename, table row key, vault note path
-    excerpt: str             # the relevant fragment from the source
-    provenance: str          # how the source was located (grep, DB query, etc.)
+    source_id: str                   # e.g. filename, table row key, vault note path
+    excerpt: str                     # the relevant fragment from the source
+    content_hash: str | None = None  # sha256 of source at retrieval time; None when no snapshot captured
+    provenance_method: str = ""      # how the source was located (grep, DB query, RAG, etc.)
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "source_id": self.source_id,
             "excerpt": self.excerpt,
-            "provenance": self.provenance,
+            "content_hash": self.content_hash,
+            "provenance_method": self.provenance_method,
         }
 
     @classmethod
@@ -67,7 +69,8 @@ class Citation:
         return cls(
             source_id=d["source_id"],
             excerpt=d["excerpt"],
-            provenance=d["provenance"],
+            content_hash=d.get("content_hash"),
+            provenance_method=d["provenance_method"],
         )
 
 
