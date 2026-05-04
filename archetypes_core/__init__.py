@@ -19,6 +19,10 @@ from archetypes_core.provenance import (  # noqa: E402
     UpstreamRef,
     to_lapis_return,
 )
+from archetypes_core.corroboration import (  # noqa: E402
+    ProvenanceCapableAdapter,
+    corroborate_envelope,
+)
 
 __all__ = [
     "INPUT_REF_TYPES",
@@ -28,4 +32,6 @@ __all__ = [
     "Provenance",
     "UpstreamRef",
     "to_lapis_return",
+    "ProvenanceCapableAdapter",
+    "corroborate_envelope",
 ]
