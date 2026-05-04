@@ -17,7 +17,10 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Literal, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Literal, Protocol, runtime_checkable
+
+if TYPE_CHECKING:
+    from archetypes_core.provenance import InputRef, LapisToolReturn, UpstreamRef
 
 
 # ---------------------------------------------------------------------------
@@ -303,3 +306,121 @@ def corroborate(
         )
 
     return scope.score(claim, substrate)
+
+
+# ---------------------------------------------------------------------------
+# ProvenanceCapableAdapter — optional Protocol extension
+# ---------------------------------------------------------------------------
+
+
+@runtime_checkable
+class ProvenanceCapableAdapter(SubstrateAdapter, Protocol):
+    """Optional extension of SubstrateAdapter for adapters that emit LLM-attribution metadata.
+
+    Adapters that make LLM calls during score() should implement this so that
+    their model and prompt fingerprint are visible in the envelope's provenance.
+    Adapters that are pure-CPU (heuristic, deterministic) do not need it.
+    """
+
+    def score_provenance(self) -> dict[str, Any]:
+        """Return adapter-level provenance metadata for the most-recent score() call.
+
+        Recognized keys (all optional):
+            - model: str — the LLM model id (e.g. "qwen3.6-35b-a3b").
+            - prompt_hash: str — sha256 of the resolved prompt.
+            - upstream_calls: list[UpstreamRef] — nested derivation chain, if any.
+
+        Unknown keys are ignored at v0. Implementations may return {} when the
+        most-recent score() did not invoke an LLM.
+        """
+        ...
+
+
+# ---------------------------------------------------------------------------
+# _summary_for_corroboration — private helper
+# ---------------------------------------------------------------------------
+
+
+def _summary_for_corroboration(result: CorroborationResult) -> str:
+    """Produce a one-line human-readable summary from a CorroborationResult."""
+    n = len(result.citations)
+    if result.verdict == "clean":
+        return f"Verdict: clean. {n} citation(s) corroborate the claim."
+    elif result.verdict == "flagged":
+        if result.drift_class is not None:
+            return f"Verdict: flagged ({result.drift_class}). {n} citation(s); see notes."
+        return f"Verdict: flagged. {n} citation(s); see notes."
+    else:  # "uncertain"
+        detail = result.notes or "no further detail"
+        if len(detail) > 120:
+            detail = detail[:120]
+        return f"Verdict: uncertain. {detail}."
+
+
+# ---------------------------------------------------------------------------
+# corroborate_envelope() — envelope-conformant variant
+# ---------------------------------------------------------------------------
+
+
+def corroborate_envelope(
+    claim: str,
+    scope: SubstrateAdapter,
+    freshness: FreshnessBudget,
+    *,
+    agent_id: str,
+    tool: str = "corroborate",
+    input_refs: list[InputRef] | None = None,
+    upstream_calls: list[UpstreamRef] | None = None,
+) -> LapisToolReturn:
+    """Envelope-conformant variant of corroborate().
+
+    Calls corroborate(claim, scope, freshness) → CorroborationResult, then
+    wraps the result in a LapisToolReturn whose provenance envelope reflects
+    the per-spec mapping (citations and primitive_decomposition lifted to
+    provenance; remaining fields stay in payload).
+
+    If `scope` implements the optional `score_provenance()` method, its
+    `model`, `prompt_hash`, and `upstream_calls` are folded into the envelope.
+    Otherwise those fields are None / empty.
+
+    The payload is the CorroborationResult unchanged (it plugs in as `payload`
+    without modification — the wrap is additive, not transforming).
+    """
+    # Deferred import to break circular dependency (provenance.py imports corroboration.py)
+    from archetypes_core.provenance import to_lapis_return
+
+    result = corroborate(claim, scope, freshness)
+    summary = _summary_for_corroboration(result)
+
+    # Extract envelope fields from the result
+    citations = result.citations
+    primitive_decomposition = result.primitive_decomposition
+    scope_id = result.scope_id
+
+    # Optional: pull LLM-attribution metadata from the adapter
+    model: str | None = None
+    prompt_hash: str | None = None
+    adapter_upstream: list[UpstreamRef] = []
+
+    if hasattr(scope, "score_provenance") and callable(scope.score_provenance):
+        prov_meta = scope.score_provenance()
+        model = prov_meta.get("model")
+        prompt_hash = prov_meta.get("prompt_hash")
+        adapter_upstream = list(prov_meta.get("upstream_calls") or [])
+
+    # Merge: caller-supplied first, adapter-supplied after
+    merged_upstream: list[UpstreamRef] = list(upstream_calls or []) + adapter_upstream
+
+    return to_lapis_return(
+        payload=result,
+        agent_id=agent_id,
+        tool=tool,
+        summary=summary,
+        model=model,
+        prompt_hash=prompt_hash,
+        input_refs=input_refs,
+        citations=citations,
+        primitive_decomposition=primitive_decomposition,
+        upstream_calls=merged_upstream,
+        scope_id=scope_id,
+    )
