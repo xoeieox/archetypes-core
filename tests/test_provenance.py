@@ -421,3 +421,96 @@ def test_manifest_hash_format():
     assert ltr.provenance.manifest_hash.startswith("sha256:")
     # 7 chars for "sha256:" + 64 hex chars
     assert len(ltr.provenance.manifest_hash) == 71
+
+
+# ---------------------------------------------------------------------------
+# pubkey_id — AC1 round-trip, AC2 envelope round-trip, AC3 hash invariance,
+# AC4 backward compatibility (no pubkey_id key → None)
+# ---------------------------------------------------------------------------
+
+
+def test_pubkey_id_provenance_round_trip():
+    """pubkey_id survives Provenance to_dict() → from_dict()."""
+    prov = Provenance(
+        schema_version=SCHEMA_VERSION,
+        agent_id="agent:test",
+        tool="t",
+        timestamp=FIXED_TS,
+        manifest_hash="sha256:deadbeef" + "0" * 56,
+        signature="sig:opaque",
+        pubkey_id="ed25519:abcdef1234567890",
+    )
+    d = prov.to_dict()
+    assert d["pubkey_id"] == "ed25519:abcdef1234567890"
+    assert d["signature"] == "sig:opaque"
+    restored = Provenance.from_dict(d)
+    assert restored.pubkey_id == "ed25519:abcdef1234567890"
+    assert restored.signature == "sig:opaque"
+    # Second round-trip must be byte-identical for those fields.
+    assert restored.to_dict()["pubkey_id"] == "ed25519:abcdef1234567890"
+
+
+def test_pubkey_id_envelope_round_trip():
+    """to_lapis_return with pubkey_id → LapisToolReturn.from_dict preserves both fields."""
+    ltr = to_lapis_return(
+        payload={"x": 1},
+        agent_id="agent:test",
+        tool="t",
+        summary="s",
+        timestamp=FIXED_TS,
+        signature="sig:opaque",
+        pubkey_id="ed25519:abcdef1234567890",
+    )
+    restored = LapisToolReturn.from_dict(ltr.to_dict())
+    assert restored.provenance.pubkey_id == "ed25519:abcdef1234567890"
+    assert restored.provenance.signature == "sig:opaque"
+
+
+def test_manifest_hash_invariant_to_pubkey_id():
+    """Same content with and without pubkey_id must produce the same manifest_hash."""
+    ltr_no_key = to_lapis_return(
+        payload={"x": 1},
+        agent_id="agent:test",
+        tool="t",
+        summary="s",
+        timestamp=FIXED_TS,
+    )
+    ltr_with_key = to_lapis_return(
+        payload={"x": 1},
+        agent_id="agent:test",
+        tool="t",
+        summary="s",
+        timestamp=FIXED_TS,
+        pubkey_id="ed25519:abcdef1234567890",
+    )
+    assert ltr_no_key.provenance.manifest_hash == ltr_with_key.provenance.manifest_hash
+
+
+def test_manifest_hash_invariant_to_signature():
+    """Symmetric assertion: adding signature also does not change the hash."""
+    ltr_no_sig = to_lapis_return(
+        payload={"x": 1},
+        agent_id="agent:test",
+        tool="t",
+        summary="s",
+        timestamp=FIXED_TS,
+    )
+    ltr_with_sig = to_lapis_return(
+        payload={"x": 1},
+        agent_id="agent:test",
+        tool="t",
+        summary="s",
+        timestamp=FIXED_TS,
+        signature="sig:opaque",
+    )
+    assert ltr_no_sig.provenance.manifest_hash == ltr_with_sig.provenance.manifest_hash
+
+
+def test_pubkey_id_backward_compatible_absent_key():
+    """A provenance dict without pubkey_id deserializes with pubkey_id is None."""
+    ltr = _minimal_ltr()
+    d = ltr.to_dict()
+    # Simulate an old envelope that has no pubkey_id key at all.
+    d["provenance"].pop("pubkey_id", None)
+    restored = LapisToolReturn.from_dict(d)
+    assert restored.provenance.pubkey_id is None

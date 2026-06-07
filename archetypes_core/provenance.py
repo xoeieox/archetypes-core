@@ -145,6 +145,7 @@ class Provenance:
     primitive_decomposition: PrimitiveDecomposition | None = None
     citations: list[Citation] = field(default_factory=list)
     signature: str | None = None                             # reserved post-v0
+    pubkey_id: str | None = None                             # reserved post-v0; signer key identity
     history_layer_hash: str | None = None                   # reserved post-v0
     job_id: str | None = None                               # reserved post-v0
 
@@ -167,6 +168,7 @@ class Provenance:
             ),
             "citations": [c.to_dict() for c in self.citations],
             "signature": self.signature,
+            "pubkey_id": self.pubkey_id,
             "history_layer_hash": self.history_layer_hash,
             "job_id": self.job_id,
         }
@@ -193,6 +195,7 @@ class Provenance:
             ),
             citations=[Citation.from_dict(c) for c in d.get("citations", [])],
             signature=d.get("signature"),
+            pubkey_id=d.get("pubkey_id"),
             history_layer_hash=d.get("history_layer_hash"),
             job_id=d.get("job_id"),
         )
@@ -301,6 +304,8 @@ def to_lapis_return(
     upstream_calls: list[UpstreamRef] | None = None,
     scope_id: str | None = None,
     timestamp: "datetime | str | None" = None,
+    signature: str | None = None,
+    pubkey_id: str | None = None,
 ) -> LapisToolReturn:
     """Wrap an existing payload in a v0-conformant LapisToolReturn envelope.
 
@@ -383,7 +388,8 @@ def to_lapis_return(
         upstream_calls=resolved_upstream_calls,
         primitive_decomposition=primitive_decomposition,
         citations=resolved_citations,
-        signature=None,
+        signature=signature,
+        pubkey_id=pubkey_id,
         history_layer_hash=None,
         job_id=None,
     )
@@ -394,6 +400,7 @@ def to_lapis_return(
     prov_dict = provenance.to_dict()
     del prov_dict["manifest_hash"]
     del prov_dict["signature"]
+    del prov_dict["pubkey_id"]
 
     if hasattr(payload, "to_dict"):
         payload_dict = payload.to_dict()
