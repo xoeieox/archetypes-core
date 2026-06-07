@@ -33,6 +33,7 @@ from archetypes_core.corroboration import Citation, PrimitiveDecomposition
 # ---------------------------------------------------------------------------
 
 SCHEMA_VERSION = "lapis-provenance-v0"
+SCHEMA_VERSION_V01 = "lapis-provenance-v0.1"  # activates reserved signature + job_id slots
 
 # ---------------------------------------------------------------------------
 # Closed enum for InputRef.type at v0
@@ -304,8 +305,10 @@ def to_lapis_return(
     upstream_calls: list[UpstreamRef] | None = None,
     scope_id: str | None = None,
     timestamp: "datetime | str | None" = None,
+    schema_version: str = SCHEMA_VERSION,
     signature: str | None = None,
     pubkey_id: str | None = None,
+    job_id: str | None = None,
 ) -> LapisToolReturn:
     """Wrap an existing payload in a v0-conformant LapisToolReturn envelope.
 
@@ -376,7 +379,7 @@ def to_lapis_return(
 
     # 3 & 5. Build provenance with manifest_hash placeholder, then compute hash.
     provenance = Provenance(
-        schema_version=SCHEMA_VERSION,
+        schema_version=schema_version,
         agent_id=agent_id,
         tool=tool,
         timestamp=ts,
@@ -391,7 +394,7 @@ def to_lapis_return(
         signature=signature,
         pubkey_id=pubkey_id,
         history_layer_hash=None,
-        job_id=None,
+        job_id=job_id,
     )
 
     # Compute manifest_hash over payload + provenance with manifest_hash and

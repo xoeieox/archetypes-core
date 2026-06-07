@@ -13,6 +13,7 @@ __version__ = "0.1.0"
 from archetypes_core.provenance import (  # noqa: E402
     INPUT_REF_TYPES,
     SCHEMA_VERSION,
+    SCHEMA_VERSION_V01,
     InputRef,
     LapisToolReturn,
     Provenance,
@@ -27,6 +28,7 @@ from archetypes_core.corroboration import (  # noqa: E402
 __all__ = [
     "INPUT_REF_TYPES",
     "SCHEMA_VERSION",
+    "SCHEMA_VERSION_V01",
     "InputRef",
     "LapisToolReturn",
     "Provenance",
