@@ -28,6 +28,7 @@ from archetypes_core.corroboration import (
 from archetypes_core.provenance import (
     INPUT_REF_TYPES,
     SCHEMA_VERSION,
+    SCHEMA_VERSION_V01,
     InputRef,
     LapisToolReturn,
     Provenance,
@@ -514,3 +515,32 @@ def test_pubkey_id_backward_compatible_absent_key():
     d["provenance"].pop("pubkey_id", None)
     restored = LapisToolReturn.from_dict(d)
     assert restored.provenance.pubkey_id is None
+
+
+def test_v01_envelope_surface_reconciled():
+    """Reconciliation guard: SCHEMA_VERSION_V01 + the to_lapis_return
+    schema_version/signature/pubkey_id/job_id params produce a v0.1 envelope
+    that round-trips with all reserved signer/job fields intact. (zephyr's
+    record_signed depends on exactly this surface.)"""
+    assert SCHEMA_VERSION_V01 == "lapis-provenance-v0.1"
+    ltr = to_lapis_return(
+        payload={"x": 1},
+        agent_id="agent:test",
+        tool="t",
+        summary="s",
+        timestamp=FIXED_TS,
+        schema_version=SCHEMA_VERSION_V01,
+        signature="sig:opaque",
+        pubkey_id="ed25519:deadbeef",
+        job_id="job:123",
+    )
+    p = ltr.provenance
+    assert p.schema_version == SCHEMA_VERSION_V01
+    assert p.signature == "sig:opaque"
+    assert p.pubkey_id == "ed25519:deadbeef"
+    assert p.job_id == "job:123"
+    restored = LapisToolReturn.from_dict(ltr.to_dict()).provenance
+    assert restored.schema_version == SCHEMA_VERSION_V01
+    assert restored.signature == "sig:opaque"
+    assert restored.pubkey_id == "ed25519:deadbeef"
+    assert restored.job_id == "job:123"
