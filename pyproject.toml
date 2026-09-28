@@ -3,7 +3,7 @@ name = "archetypes-core"
 version = "0.1.0"
 description = "Behavioral intelligence engine — primitives, T/C/V scoring, situation pressure, relationship trajectory"
 requires-python = ">=3.11"
-license = "MIT"
+license = "Apache-2.0"
 dependencies = [
     "pydantic>=2.0",
 ]

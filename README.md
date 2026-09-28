@@ -89,4 +89,4 @@ build with it, we would like to hear where it goes.
 
 ## License
 
-MIT - see [LICENSE](LICENSE).
+Apache License 2.0 - see `LICENSE` and `NOTICE`.
